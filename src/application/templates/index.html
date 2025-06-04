@@ -1,0 +1,239 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	
+
+		<title>Restaurant Table Booking System</title>
+
+		<!-- Google font -->
+		<link href="https://fonts.googleapis.com/css?family=Quicksand:400,700%7CCabin:400%7CDancing+Script" rel="stylesheet">
+
+		<!-- Bootstrap -->
+		<link type="text/css" rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}"/>
+
+		<!-- Owl Carousel -->
+		<link type="text/css" rel="stylesheet" href="{% static 'css/owl.carousel.css'%}" />
+		<link type="text/css" rel="stylesheet" href="{% static 'css/owl.theme.default.css'%}" />
+
+		<!-- Font Awesome Icon -->
+		<link rel="stylesheet" href="{% static 'css/font-awesome.min.css'%}">
+
+		<!-- Custom stlylesheet -->
+		<link type="text/css" rel="stylesheet" href="{% static 'css/style.css'%}"/>
+
+	
+    </head>
+	<body>
+
+		<!-- Header -->
+		<header id="header">
+
+			<!-- Top nav -->
+			<div id="top-nav">
+				<div class="container">
+
+				<!-- logo -->
+				<div class="logo">
+					<h3>Resturant Table Booking System</h3>
+				</div>
+				<!-- logo -->
+
+				<!-- Mobile toggle -->
+				<button class="navbar-toggle">
+					<span></span>
+				</button>
+				<!-- Mobile toggle -->
+
+				<!-- social links -->
+				<ul class="social-nav">
+					<li><a href="#"><i class="fa fa-facebook"></i></a></li>
+					<li><a href="#"><i class="fa fa-twitter"></i></a></li>
+					<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+				</ul>
+				<!-- /social links -->
+
+				</div>
+			</div>
+			<!-- /Top nav -->
+
+			<!-- Bottom nav -->
+			<div id="bottom-nav">
+				<div class="container">
+				<nav id="nav">
+
+					<!-- nav -->
+					<ul class="main-nav nav navbar-nav">
+						<li><a href="{% url 'index' %}">Home</a></li>
+						<li><a href="{% url 'login' %}">Admin</a></li>
+					</ul>
+					<ul class="cta-nav">
+						<li><a href="{% url 'check_booking_status' %}" class="main-button">Check Booking Status</a></li>
+					</ul>
+					<!-- /nav -->
+
+					<!-- button nav -->
+					<ul class="cta-nav">
+						<li><a href="{% url 'index' %}#reservation" class="main-button">Reserve</a></li>
+					</ul>
+					<!-- button nav -->
+
+					
+
+				</nav>
+				</div>
+			</div>
+			<!-- /Bottom nav -->
+
+
+		</header>
+		<!-- /Header -->
+
+	
+
+
+		<!-- Menu -->
+		<div id="menu" class="section">
+
+			<!-- Backgound Image -->
+			<div class="bg-image bg-parallax overlay" style="background-image: url('{% static 'img/background01.jpg' %}');"></div>
+			<!-- /Backgound Image -->
+
+			<!-- container -->
+			<div class="container">
+
+				<!-- row -->
+
+
+
+			</div>
+			<!-- /container -->
+
+		</div>
+		<!-- /Menu -->
+
+		<!-- Reservation -->
+		<div id="reservation" class="section">
+
+			<!-- Backgound Image -->
+			<div class="bg-image" style="background-image:url('{% static 'img/background03.jpg' %}')"></div>
+          
+			<!-- /Backgound Image -->
+
+			<!-- container -->
+			<div class="container">
+
+				<!-- row -->
+				<div class="row">
+
+					<!-- reservation form -->
+					<div class="col-md-12 col-md-offset-1 col-sm-10 col-sm-offset-1">
+						{% if messages %}
+						{% for message in messages %}
+							<div class="alert alert-success">
+								{{ message }}
+							</div>
+						{% endfor %}
+					{% endif %}
+						<form class="reserve-form row" method="POST">
+							{% csrf_token %}
+							<div class="section-header text-center">
+								<h4 class="sub-title">Reservation</h4>
+								<h2 class="title white-text">Book Your Table</h2>
+							</div>
+
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="name">Name:</label>
+									<input class="input" type="text" placeholder="Full Name" id="fullname" name="fullname">
+								</div>
+								<div class="form-group">
+									<label for="phone">Phone:</label>
+									<input class="input" type="tel" placeholder="Phone" id="phonenum" name="phonenum">
+								</div>
+								<div class="form-group">
+									<label for="date">Booking Date:</label>
+									<input class="input" type="date" placeholder="MM/DD/YYYY" id="bookingdate" name="bookingdate">
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="email">Email:</label>
+									<input class="input" type="email" placeholder="Email" id="email" name="email">
+								</div>
+								<div class="form-group">
+									<label for="number">Number of Guests:</label>
+									<select class="input" id="noofguest" name="noofguest" required>
+										{% for i in "123456789" %}
+										<option value="{{ i }}">{{ i }} Person{% if i != "1" %}s{% endif %}</option>
+										{% endfor %}
+									</select>
+								</div>
+								<div class="form-group">
+								  <label for="time">Booking Time:</label>
+								  <input class="input" type="time" placeholder="HH:MM" id="bookingtime" name="bookingtime">
+								</div>
+							</div>
+
+							<div class="col-md-12 text-center">
+								<button class="main-button">Book Now</button>
+							</div>
+
+						</form>
+					</div>
+					<!-- /reservation form -->
+
+					
+
+				</div>
+				<!-- /row -->
+
+			</div>
+			<!-- /container -->
+
+		</div>
+		<!-- /Reservation -->
+
+	<hr>
+
+		<!-- Footer -->
+		<footer id="footer">
+
+			<!-- container -->
+			<div class="container">
+
+				<!-- row -->
+				<div class="row">
+
+					<!-- copyright -->
+					<div class="col-md-6">
+						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+						<span class="copyright">Resturant Table Booking System</span>
+						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+					</div>
+					<!-- /copyright -->
+
+				
+
+				</div>
+				<!-- /row -->
+
+			</div>
+			<!-- /container -->
+
+		</footer>
+		<!-- /Footer -->
+
+
+
+		<!-- jQuery Plugins -->
+		<script type="text/javascript" src="{% static 'js/jquery.min.js'%}"></script>
+		<script type="text/javascript" src="{% static 'js/bootstrap.min.js'%}"></script>
+		<script type="text/javascript" src="{% static 'js/owl.carousel.min.js'%}"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+		<script type="text/javascript" src="{% static 'js/google-map.js'%}"></script>
+		<script type="text/javascript" src="{% static 'js/main.js'%}"></script>
+
+	</body>
+</html>

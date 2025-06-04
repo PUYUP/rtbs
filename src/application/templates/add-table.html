@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <h3 class="page-title"> Add Table </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Add Table</li>
+      </ol>
+    </nav>
+  </div>
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Add Table</h4>
+          {% if messages %}
+          {% for message in messages %}
+           {% if message.tags == 'error' %}
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          {{message}}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+           </button>
+            </div>
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+             {% if messages %}
+          {% for message in messages %}
+           {% if message.tags == 'success' %}
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          {{message}}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+           </button>
+            </div>
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+          <form class="forms-sample" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="exampleInputFullname" style="color: blue;font-weight: bolder;font-size: larger;">Table No</label>
+                <input type="text" class="form-control" id="tableno" name="tableno" placeholder="Enter Table Number" required>
+              </div>
+            
+            <button type="submit" class="btn btn-primary mr-2">Add</button>
+          
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>{% endblock %}

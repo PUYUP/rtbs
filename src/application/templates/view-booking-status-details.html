@@ -1,0 +1,257 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	
+
+		<title>Restaurant Table Booking System</title>
+
+		<!-- Google font -->
+		<link href="https://fonts.googleapis.com/css?family=Quicksand:400,700%7CCabin:400%7CDancing+Script" rel="stylesheet">
+
+		<!-- Bootstrap -->
+		<link type="text/css" rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}"/>
+
+		<!-- Owl Carousel -->
+		<link type="text/css" rel="stylesheet" href="{% static 'css/owl.carousel.css'%}" />
+		<link type="text/css" rel="stylesheet" href="{% static 'css/owl.theme.default.css'%}" />
+
+		<!-- Font Awesome Icon -->
+		<link rel="stylesheet" href="{% static 'css/font-awesome.min.css'%}">
+
+		<!-- Custom stlylesheet -->
+		<link type="text/css" rel="stylesheet" href="{% static 'css/style.css'%}"/>
+
+	
+    </head>
+	<body>
+
+		<!-- Header -->
+		<header id="header">
+
+			<!-- Top nav -->
+			<div id="top-nav">
+				<div class="container">
+
+				<!-- logo -->
+				<div class="logo">
+					<h3>Resturant Table Booking System</h3>
+				</div>
+				<!-- logo -->
+
+				<!-- Mobile toggle -->
+				<button class="navbar-toggle">
+					<span></span>
+				</button>
+				<!-- Mobile toggle -->
+
+				<!-- social links -->
+				<ul class="social-nav">
+					<li><a href="#"><i class="fa fa-facebook"></i></a></li>
+					<li><a href="#"><i class="fa fa-twitter"></i></a></li>
+					<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+				</ul>
+				<!-- /social links -->
+
+				</div>
+			</div>
+			<!-- /Top nav -->
+
+			<!-- Bottom nav -->
+			<div id="bottom-nav">
+				<div class="container">
+				<nav id="nav">
+
+					<!-- nav -->
+					<ul class="main-nav nav navbar-nav">
+						<li><a href="{% url 'index' %}">Home</a></li>
+						<li><a href="{% url 'login' %}">Admin</a></li>
+					</ul>
+					<ul class="cta-nav">
+						<li><a href="{% url 'check_booking_status' %}" class="main-button">Check Booking Status</a></li>
+					</ul>
+					<!-- /nav -->
+
+					<!-- button nav -->
+					<ul class="cta-nav">
+						<li><a href="{% url 'index' %}#reservation" class="main-button">Reserve</a></li>
+					</ul>
+					<!-- button nav -->
+
+				
+
+				</nav>
+				</div>
+			</div>
+			<!-- /Bottom nav -->
+
+
+		</header>
+		<!-- /Header -->
+
+	
+
+
+		<!-- Menu -->
+		<div id="menu" class="section">
+
+			<!-- Backgound Image -->
+			<div class="bg-image bg-parallax overlay" style="background-image: url('{% static 'img/background01.jpg' %}');"></div>
+			<!-- /Backgound Image -->
+
+			<!-- container -->
+			<div class="container">
+
+				<!-- row -->
+				<div class="row">
+
+					<div class="section-header text-center">
+						<h4 class="sub-title">Booking Details</h4>
+						<h2 class="title white-text">Check Alloted Table</h2>
+					</div>
+
+                   
+					<!-- /menu nav -->
+
+					<!-- menu content -->
+					<div id="menu-content" class="tab-content">
+
+						<!-- menu1 -->
+						<div>
+							  
+                            {% if messages %}
+                            <div>
+                                {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                         
+                              
+                            <table id="example1" class="table table-bordered table-striped">
+       
+                                <tbody>
+                                    {% for vb in view_booking_status %}
+                    
+                    
+                     <tr>
+                                <th>Booking Number</th>
+                                  <td colspan="3">{{vb.bookingnumber}}</td>
+                                </tr>
+                    
+                                <tr>
+                                <th> Name</th>
+                                  <td>{{vb.fullname}}</td>
+                                  <th>Email Id</th>
+                                 <td> {{vb.email}}</td>
+                                </tr>
+                                <tr>
+                                  <th> Mobile No</th>
+                                  <td>{{vb.phonenum}}</td>
+                                  <th>No of Persons</th>
+                                  <td>{{vb.noofguest}}</td>
+                                </tr>
+                                <tr>
+                                  <th>Booking Date</th>
+                                 <td>{{vb.bookingdate}}</td>
+                                 <th>Booking Time</th>
+                                 <td>{{vb.bookingtime}}</td>
+                               </tr>
+                               <tr>
+                                <th>Posting Date</th>
+                                  <td colspan="3">{{vb.postingdate}}</td>
+                                </tr>
+                    
+                                <tr>
+                                    <th>Table Alloted</th>
+                                    {% if vb.status == 'Accepted' %}
+                                      <td colspan="3">{{vb.table_id.tablenum}}</td>
+                                      {% else %}
+                                      <td colspan="3">{{vb.status}}</td> {% endif %}
+                                    </tr>
+                    
+                    
+                          <tr>
+                                <th>Booking  Status</th>
+                                  <td>{{vb.status}}</td>
+                                  <th>Updation Date</th>
+                                  <td>{{vb.remark_date}}</td>
+                                </tr>
+                    
+                    <tr>
+                                <th> Remark</th>
+                                <td colspan="8">{% if vb.status == 'pending' %}
+                                    <span>Not Answered Yet</span>
+                                {% else %}
+                                    <span>{{vb.remark }}</span>
+                                
+                                {% endif %}</td>
+                                </tr>
+                    
+                              
+                            
+                           
+                                </tbody>
+                    
+                                {% endfor %}                    </table>
+
+
+						</div>
+						<!-- /menu1 -->
+
+					</div>
+					<!-- /menu content -->
+
+				</div>
+				<!-- /row -->
+
+			</div>
+			<!-- /container -->
+
+		</div>
+		<!-- /Menu -->
+
+		<!-- Footer -->
+		<footer id="footer">
+
+			<!-- container -->
+			<div class="container">
+
+				<!-- row -->
+				<div class="row">
+
+					<!-- copyright -->
+					<div class="col-md-6">
+						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+						<span class="copyright">Resturant Table Booking System</span>
+						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+					</div>
+					<!-- /copyright -->
+
+				
+
+				</div>
+				<!-- /row -->
+
+			</div>
+			<!-- /container -->
+
+		</footer>
+		<!-- /Footer -->
+
+
+
+		<!-- jQuery Plugins -->
+		<script type="text/javascript" src="{% static 'js/jquery.min.js'%}"></script>
+		<script type="text/javascript" src="{% static 'js/bootstrap.min.js'%}"></script>
+		<script type="text/javascript" src="{% static 'js/owl.carousel.min.js'%}"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+		<script type="text/javascript" src="{% static 'js/google-map.js'%}"></script>
+		<script type="text/javascript" src="{% static 'js/main.js'%}"></script>
+
+	</body>
+</html>

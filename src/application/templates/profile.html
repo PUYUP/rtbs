@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <h3 class="page-title"> Profile </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Profile</li>
+      </ol>
+    </nav>
+  </div>
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Profile</h4>
+          {% if messages %}
+          {% for message in messages %}
+           {% if message.tags == 'error' %}
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          {{message}}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+           </button>
+            </div>
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+             {% if messages %}
+          {% for message in messages %}
+           {% if message.tags == 'success' %}
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          {{message}}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+           </button>
+            </div>
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+          <form class="forms-sample" method="POST" enctype="multipart/form-data" action="{% url 'admin_profile_update' %}">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="exampleInputName1" style="color: blue;font-weight: bolder;font-size: larger;">Profile Pic</label>
+              <input type="file" class="form-control" name="profile_pic">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail3" style="color: blue;font-weight: bolder;font-size: larger;">First Name</label>
+              <input type="text" class="form-control" name="first_name" value="{{user.first_name}}">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword4" style="color: blue;font-weight: bolder;font-size: larger;">Last Name</label>
+              <input type="text" class="form-control" name="last_name" value="{{user.last_name}}">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword4" style="color: blue;font-weight: bolder;font-size: larger;">Email</label>
+                <input type="email" class="form-control" name="email" value="{{user.email}}">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword4" style="color: blue;font-weight: bolder;font-size: larger;">Mobile Number</label>
+                <input type="text" class="form-control" name="mobnum" value="{{user.mobile}}" maxlength="10" pattern="[0-9]+">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword4" style="color: blue;font-weight: bolder;font-size: larger;">Username</label>
+                <input type="text" class="form-control" readonly="True" name="username" value="{{user.username}}">
+              </div>
+         
+            <button type="submit" class="btn btn-primary mr-2">Submit</button>
+          
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>{% endblock %}
