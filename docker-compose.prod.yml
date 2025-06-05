@@ -28,6 +28,19 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     ports:
       - 3306:3306
+  nginx:
+    build: ./nginx
+    container_name: rtbs_nginx
+    volumes:
+      - static_volume:/usr/src/application/static/:rw
+      - media_volume:/usr/src/application/media/:rw
+    ports:
+      - 8081:80
+      - 8082:443
+    depends_on:
+      - web
 
 volumes:
   mysql_data:
+  static_volume:
+  media_volume:
