@@ -1,0 +1,25 @@
+name: Deploy to the VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: main
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy using ssh
+        uses: appleboy/ssh-action@master
+        with:
+          HOST: ${{ secrets.VPS_HOST }}
+          USERNAME: ${{ secrets.VPS_USERNAME }}
+          PORT: ${{ secrets.VPS_PORT }}
+          KEY: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /var/www/rtbs
+            git pull origin main
+            sudo docker-compose -f docker-compose.prod.yml up -d --build
