@@ -90,7 +90,11 @@ def doLogin(request):
         password = request.POST.get('password')
 
         # Authenticate the user
-        user = authenticate(request, username=username, password=password)
+        try:
+            user = authenticate(request, username=username, password=password)
+        except Exception as e:
+            print(e)
+
         if user is not None:
             if user.is_superuser:  # Ensure the user is an admin
                 login(request, user)
