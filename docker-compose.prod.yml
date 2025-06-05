@@ -27,6 +27,7 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     ports:
       - 3306:3306
+    network_mode: bridge
     healthcheck:
       test: ["CMD", "mysql", "-h", "localhost", "-u", "root", "-p ${MYSQL_ROOT_PASSWORD}", "-e", "SELECT 1"]
       timeout: 20s
