@@ -67,10 +67,10 @@ WSGI_APPLICATION = 'resturanttablebs.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'rtbspythondb',
-        'USER': 'root',
-        'PASSWORD': '123456',
-        'HOST': 'database',
+        'NAME': os.environ.get('MYSQL_DATABASE', 'rtbspythondb'),
+        'USER': os.environ.get('MYSQL_USER', 'root'),
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD', '123456'),
+        'HOST': os.environ.get('MYSQL_HOST', 'database'),
         'PORT': '3306',
     }
 }
