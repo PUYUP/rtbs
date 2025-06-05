@@ -10,6 +10,7 @@ services:
       - ./src/application/:/usr/src/application/
     ports:
       - 5001:5001
+    network_mode: bridge
     env_file:
       - ./.env
     depends_on:
