@@ -5,11 +5,11 @@ services:
   web:
     container_name: rtbs_web
     build: ./src
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:5001
     volumes:
       - ./src/application/:/usr/src/application/
     ports:
-      - 8000:8000
+      - 5001:5001
     env_file:
       - ./.env
     depends_on:
