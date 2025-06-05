@@ -115,13 +115,15 @@ def doLogout(request):
     request.session.flush()  # Clear the session including CSRF token
     return redirect('login')
 
-@login_required(login_url = '/')
+
+@login_required(login_url='/')
 def ADMIN_PROFILE(request):
     user = CustomUser.objects.get(id = request.user.id)
     context = {
         "user":user,
     }
     return render(request,'profile.html',context)
+
 
 @login_required(login_url = '/')
 def DASHBOARD(request):
@@ -139,6 +141,7 @@ def DASHBOARD(request):
          
     }       
     return render(request,'dashboard.html',context)
+
 
 @login_required(login_url = '/')
 def ADMIN_PROFILE_UPDATE(request):
@@ -162,6 +165,8 @@ def ADMIN_PROFILE_UPDATE(request):
             if profile_pic !=None and profile_pic != "":
                customuser.profile_pic = profile_pic
             customuser.save()
+
+            print(customuser.profile_pic.path)
             messages.success(request,"Your profile has been updated successfully")
             return redirect('admin_profile')
 
