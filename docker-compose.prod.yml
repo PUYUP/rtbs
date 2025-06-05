@@ -10,10 +10,11 @@ services:
       - ./src/application/:/usr/src/application/
     ports:
       - 5001:5001
-    network_mode: bridge
     env_file:
       - ./.env
     depends_on:
+      - database
+    links:
       - database
   database:
     image: mysql:9.3.0
@@ -28,7 +29,6 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     ports:
       - 3306:3306
-    network_mode: bridge
     healthcheck:
       test: ["CMD", "mysql", "-h", "localhost", "-u", "root", "-p ${MYSQL_ROOT_PASSWORD}", "-e", "SELECT 1"]
       timeout: 20s
