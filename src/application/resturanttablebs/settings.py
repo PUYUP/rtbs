@@ -132,3 +132,7 @@ AUTH_USER_MODEL = 'rtbsapp.CustomUser'
 # https://django-crispy-forms.readthedocs.io/en/latest/install.html
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+
+# https://django.readthedocs.io/en/stable/ref/settings.html#std-setting-SECURE_CROSS_ORIGIN_OPENER_POLICY
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
