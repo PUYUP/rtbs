@@ -1,0 +1,22 @@
+<!-- Header -->
+<header id="header">
+	<nav id="top-nav" class="navbar navbar-expand-lg">
+		<div class="container d-flex align-items-center">
+			<a class="navbar-brand h-auto" href="{% url 'index' %}">
+				<h3 class="m-0">{{ config.TAGLINE }}</h3>
+			</a>
+			<div class="collapse navbar-collapse ms-auto" id="navbarSupportedContent">
+				<ul class="navbar-nav d-flex gap-3">
+					<li class="nav-item">
+						<a class="nav-link main-button btn-sm px-4 py-3" href="{% url 'index' %}#reservation">Reserve a Table</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="nav-link main-button btn-sm px-4 py-3" href="{% url 'index' %}#reservation">See Manu</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+</header>
+<!-- /Header -->
