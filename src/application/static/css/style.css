@@ -115,13 +115,15 @@ ul,ol{
 
 /* --- Background Image --- */
 .bg-image {
-	position:absolute;
+	position:fixed;
 	left:0;
 	right:0;
 	top:0;
 	bottom:0;
 	background-position:center;
 	background-size:cover;
+	width: 100%;
+	height: 100% !important;
 	z-index:-1;
 }
 

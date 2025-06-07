@@ -30,19 +30,20 @@ class WebpageSettingsView(View):
         if form.is_valid():
             for field in form:
                 key = field.name.upper()
-                value = form.cleaned_data.get(field.name, '')
-                if isinstance(value, InMemoryUploadedFile):
-                    fs = FileSystemStorage()
-                    filename = fs.save(value.name, value)
-                    defaults = {
-                        "__type__": "default",
-                        "__value__": filename,
-                    }
-                    Constance.objects.update_or_create(
-                        key=key,
-                        defaults={'value': json.dumps(defaults)})
-                else:
-                    constance._set_constance_value(key, value)
+                value = form.cleaned_data.get(field.name, None)
+                if value:
+                    if isinstance(value, InMemoryUploadedFile):
+                        fs = FileSystemStorage()
+                        filename = fs.save(value.name, value)
+                        defaults = {
+                            "__type__": "default",
+                            "__value__": filename,
+                        }
+                        Constance.objects.update_or_create(
+                            key=key,
+                            defaults={'value': json.dumps(defaults)})
+                    else:
+                        constance._set_constance_value(key, value)
             messages.success(request, "Your webpage settings successfully changed.")
             return redirect('webpage_settings')
         return render(request, self.template_name, context=self.context)

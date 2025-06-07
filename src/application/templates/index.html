@@ -116,7 +116,8 @@
 		<div id="reservation" class="section">
 
 			<!-- Backgound Image -->
-			<div class="bg-image" style="background-image:url('{% static 'img/background03.jpg' %}')"></div>
+			{% get_media_prefix as MEDIA_URL %}
+			<div class="bg-image" style="background-image:url('{{ MEDIA_URL }}{{ config.BACKGROUND_IMAGE }}')"></div>
           
 			<!-- /Backgound Image -->
 
@@ -135,7 +136,11 @@
 							</div>
 						{% endfor %}
 					{% endif %}
-						<form class="reserve-form row" method="POST">
+						<form 
+							class="reserve-form row"
+							method="POST"
+							style="background-color: {{ config.BACKGROUND_COLOR_BOOKING_FORM }}"
+						>
 							{% csrf_token %}
 							<div class="section-header text-center">
 								<h4 class="sub-title">Reservation</h4>
