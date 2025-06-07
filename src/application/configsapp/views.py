@@ -17,6 +17,8 @@ class WebpageSettingsView(View):
 
     def get(self, request):
         form = forms.ConstanteForm(initial={
+            'tagline': config.TAGLINE,
+            'logo_image': config.LOGO_IMAGE,
             'background_color_booking_form': config.BACKGROUND_COLOR_BOOKING_FORM,
             'background_image': config.BACKGROUND_IMAGE,
         })
