@@ -9,6 +9,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
 from django.conf import settings
+from django.views.decorators.clickjacking import xframe_options_sameorigin
 from constance.management.commands import constance
 from constance.models import Constance
 from constance import config
@@ -59,6 +60,7 @@ class ManuPageView(View):
     template_name = 'manu-page.html'
     context = {}
 
+    @xframe_options_sameorigin
     def get(self, request):
         file_content = config.MANU_PAGE_CONTENT
         self.context.update({

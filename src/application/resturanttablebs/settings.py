@@ -136,3 +136,4 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # https://django.readthedocs.io/en/stable/ref/settings.html#std-setting-SECURE_CROSS_ORIGIN_OPENER_POLICY
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+X_FRAME_OPTIONS = 'SAMEORIGIN'
