@@ -36,6 +36,7 @@
             {% if mime_type == 'application/pdf' %}
                 <embed class="w-100" src="{{ file_url }}" height="800">
             {% else %}
+                {% get_media_prefix as MEDIA_URL %}
                 <img src="{{ MEDIA_URL }}{{ config.MANU_PAGE_CONTENT }}" class="w-100 h-auto" />
             {% endif %}
         </div>
