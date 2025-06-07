@@ -1,10 +1,14 @@
 import json
+import os
+import mimetypes
+
 from django.shortcuts import render, redirect
 from django.views import View
 from django.db import transaction
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
+from django.conf import settings
 from constance.management.commands import constance
 from constance.models import Constance
 from constance import config
@@ -49,3 +53,21 @@ class WebpageSettingsView(View):
             messages.success(request, "Your webpage settings successfully changed.")
             return redirect('webpage_settings')
         return render(request, self.template_name, context=self.context)
+
+
+class ManuPageView(View):
+    template_name = 'manu-page.html'
+    context = {}
+
+    def get(self, request):
+        file_content = config.MANU_PAGE_CONTENT
+        self.context.update({
+            'mime_type': self.get_mime_type(file_content),
+            'file_url': request.build_absolute_uri(settings.MEDIA_URL + file_content),
+        })
+        return render(request, self.template_name, self.context)
+
+    def get_mime_type(self, filename):
+        """Guesses the MIME type of a file based on its extension."""
+        mime_type, encoding = mimetypes.guess_type(filename)
+        return mime_type
