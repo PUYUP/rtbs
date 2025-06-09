@@ -12,7 +12,7 @@ from django.conf import settings
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from constance.management.commands import constance
 from constance.models import Constance
-from constance import config
+from constance import config, settings as constance_settings, base
 from . import forms
 
 
@@ -21,12 +21,12 @@ class WebpageSettingsView(View):
     context = {}
 
     def get(self, request):
-        form = forms.ConstanteForm(initial={
-            'tagline': config.TAGLINE,
-            'logo_image': config.LOGO_IMAGE,
-            'background_color_booking_form': config.BACKGROUND_COLOR_BOOKING_FORM,
-            'background_image': config.BACKGROUND_IMAGE,
-        })
+        set_for_value = {}
+        base_config = base.Config()
+        for k in constance_settings.CONFIG.keys():
+            set_for_value.update({k.lower(): base_config.__getattr__(k)})
+
+        form = forms.ConstanteForm(initial={**set_for_value})
         self.context.update({'form': form})
         return render(request, self.template_name, context=self.context)
 
