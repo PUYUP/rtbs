@@ -25,7 +25,7 @@
           <div class="dropdown-menu navbar-dropdown dropdown-menu-right p-0 border-0 font-size-sm" aria-labelledby="profileDropdown" data-x-placement="bottom-end">
             <div class="p-3 text-center bg-primary">
                 {% if user.profile_pic %}
-                <img src="{{ user.profile_pic.url }}" alt="Profile Picture">
+                <img src="{{ user.profile_pic.url }}" alt="Profile Picture" style="width: 60px; height: auto;">
             {% else %}
                 <img src="/static/default-profile.png" alt="Default Profile Picture">
             {% endif %}

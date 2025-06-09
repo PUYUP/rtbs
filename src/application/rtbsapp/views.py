@@ -189,7 +189,7 @@ def CHANGE_PASSWORD(request):
             user = User.objects.get(username=un)
             login(request, user)
         else:
-            messages.success(request, 'Current Password wrong!!!')
+            messages.error(request, 'Current Password wrong!!!')
             return redirect("change_password")
     return render(request, 'change-password.html')
 
