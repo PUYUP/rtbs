@@ -19,6 +19,7 @@ CONSTANCE_CONFIG = {
     'BACKGROUND_IMAGE': ('', _('Change background image webpage'), 'image_field'),
     'BACKGROUND_COLOR_BOOKING_FORM': ('', _('Booking form background color'), str),
     'MANU_PAGE_CONTENT': ('', _('Can be PDF or image file.'), 'file_field'),
+    'MANU_PDF_BACKGROUND_COLOR': ('#333', _('Change PDF file background color.'), str),
 
     'BUTTON_BACKGROUND_COLOR': ('#f36700', _('Change button background color'), str),
     'BUTTON_HOVER_COLOR': ("#c05000", _('Change button hover background color'), str),

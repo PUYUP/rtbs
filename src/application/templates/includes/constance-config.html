@@ -36,11 +36,15 @@
     .pdf-container {
         padding: 25px;
         max-width: 800px;
-        background-color: #222;
+        background-color: {{ config.MANU_PDF_BACKGROUND_COLOR }};
     }
 
     .pdf-container canvas {
         width: 100%;
+    }
+
+    .pdf-container canvas + canvas {
+        margin-top: 25px;
     }
 
     #pdf-content {
