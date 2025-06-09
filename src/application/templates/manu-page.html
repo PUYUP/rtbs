@@ -26,15 +26,23 @@
 		<!-- Custom stlylesheet -->
 		<link type="text/css" rel="stylesheet" href="{% static 'css/style.css'%}"/>
         
-	
+		<!-- Includes constance config -->
+		{% include 'includes/constance-config.html' %}
     </head>
 	<body>
         
 		{% include 'includes/header-public.html' %}
-        
-        <div class="container">
+
+		<!-- Backgound Image -->
+		{% get_media_prefix as MEDIA_URL %}
+		<div class="bg-image" style="background-image: url('{{ MEDIA_URL }}{{ config.BACKGROUND_IMAGE }}')"></div>
+		<!-- /Backgound Image -->
+
+        <div class="container pb-5">
             {% if mime_type == 'application/pdf' %}
-                <embed class="w-100" src="{{ file_url }}" height="800">
+				<div class="pdf-container mx-auto">
+					<div id="pdf-content"></div>
+				</div>
             {% else %}
                 {% get_media_prefix as MEDIA_URL %}
                 <img src="{{ MEDIA_URL }}{{ config.MANU_PAGE_CONTENT }}" class="w-100 h-auto" />
@@ -75,5 +83,69 @@
 		<script type="text/javascript" src="{% static 'js/owl.carousel.min.js'%}"></script>
 		<script type="text/javascript" src="{% static 'js/main.js'%}"></script>
 
+		<script type="module" src="{% static 'pdfjs/pdf.mjs' %}"></script>
+		<script type="module">
+			var container = document.getElementById('pdf-container');
+			// If absolute URL from the remote server is provided, configure the CORS
+			// header on that server.
+			var url = '{{ file_url }}';
+
+			// Loaded via <script> tag, create shortcut to access PDF.js exports.
+			var { pdfjsLib } = globalThis;
+
+			// The workerSrc property shall be specified.
+			pdfjsLib.GlobalWorkerOptions.workerSrc = "{% static 'pdfjs/pdf.worker.mjs' %}";
+
+			// Asynchronous download of PDF
+			var loadingTask = pdfjsLib.getDocument(url);
+			var currPage = 1; //Pages are 1-based not 0-based
+			var numPages = 0;
+			var thePDF = null;
+			var pdfContent = document.getElementById('pdf-content');
+
+			function handlePages(page) {
+				console.log('Page loaded');
+
+				var scale = 1.5;
+				var viewport = page.getViewport({scale: scale});
+
+				// Prepare canvas using PDF page dimensions
+				var canvas = document.createElement("canvas");
+				canvas.style.display = "block";
+				var context = canvas.getContext('2d');
+				canvas.height = viewport.height;
+				canvas.width = viewport.width;
+
+				// Draw it on the canvas
+				page.render({
+					canvasContext: context,
+					viewport: viewport
+				});
+
+				//Add it to the web page
+    			pdfContent.appendChild(canvas);
+
+				// Move to next page
+				currPage++;
+				if (thePDF !== null && currPage <= numPages) {
+					thePDF.getPage(currPage).then(handlePages);
+				}
+			}
+
+			loadingTask.promise.then(function(pdf) {
+				console.log('PDF loaded');
+
+				// Set PDFJS global object (so we can easily access in our page functions
+				thePDF = pdf;
+
+				// How many pages it has
+				numPages = pdf.numPages;
+
+				pdf.getPage(1).then(handlePages);
+			}, function (reason) {
+				// PDF loading error
+				console.error(reason);
+			});
+		</script>
 	</body>
 </html>
