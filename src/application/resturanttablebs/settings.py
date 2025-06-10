@@ -21,6 +21,8 @@ ALLOWED_HOSTS = ['localhost', 'rtbs.asciiutf.com']
 # Application definition
 
 INSTALLED_APPS = [
+    'djangocms_admin_style',
+    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -32,6 +34,9 @@ INSTALLED_APPS = [
     'rtbsapp',
     'configsapp',
     'constance',
+    'cms',
+    'menus',
+    'treebeard',
 ]
 
 MIDDLEWARE = [
@@ -137,3 +142,13 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 # https://django.readthedocs.io/en/stable/ref/settings.html#std-setting-SECURE_CROSS_ORIGIN_OPENER_POLICY
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+
+# https://docs.django-cms.org/en/stable/introduction/01-install.html#adding-django-cms-to-an-existing-django-project
+LANGUAGES = [
+    ("en", "English"),
+    ("de", "German"),
+    ("it", "Italian"),
+]
+LANGUAGE_CODE = "en"
+CMS_CONFIRM_VERSION4 = True

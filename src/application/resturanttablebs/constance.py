@@ -16,6 +16,7 @@ CONSTANCE_CONFIG = {
     'FOOTER_BACKGROUND_COLOR': ('#222222', _('Change footer background color'), str),
     'FOOTER_TEXT_COLOR': ('#ffffff', _('Change footer text color'), str),
 
+    'BACKGROUND_COLOR': ('#fff', _('The body background color.'), str),
     'BACKGROUND_IMAGE': ('', _('Change background image webpage'), 'image_field'),
     'BACKGROUND_COLOR_BOOKING_FORM': ('', _('Booking form background color'), str),
     'MANU_PAGE_CONTENT': ('', _('Can be PDF or image file.'), 'file_field'),
