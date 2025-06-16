@@ -20,6 +20,7 @@
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
+    var scrollTime = "{{ scroll_time }}";
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
       timeZone: 'UTC',
@@ -29,7 +30,7 @@
         right: 'resourceTimelineDay,resourceTimelineTenDay,resourceTimelineMonth'
       },
       initialView: 'resourceTimelineDay',
-      scrollTime: '08:00',
+      scrollTime: scrollTime,
       aspectRatio: 1.5,
       editable: false,
       resourceAreaHeaderContent: 'Tables',

@@ -13,6 +13,8 @@ from datetime import datetime
 from django.contrib.auth.hashers import make_password
 from django.utils.timezone import timedelta
 
+from rtbsapp.models import Tablebooking
+
 User = get_user_model()
 
 
@@ -114,6 +116,14 @@ def doLogout(request):
 @login_required(login_url='/Login')
 def CalendarPage(request):
     context = {}
+    # Get newest booking
+    scroll_time = '00:00'
+    booking = Tablebooking.objects.filter(start_time__isnull=False) \
+        .order_by('start_time').first()
+    if booking:
+        start_time = booking.start_time
+        scroll_time = '{}:{}'.format(start_time.hour, start_time.minute)
+    context.update({'scroll_time': scroll_time})
     return render(request, 'calendar-page.html', context)
 
 
