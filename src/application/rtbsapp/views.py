@@ -111,7 +111,13 @@ def doLogout(request):
     return redirect('login')
 
 
-@login_required(login_url='/')
+@login_required(login_url='/Login')
+def CalendarPage(request):
+    context = {}
+    return render(request, 'calendar-page.html', context)
+
+
+@login_required(login_url='/Login')
 def ADMIN_PROFILE(request):
     user = CustomUser.objects.get(id=request.user.id)
     context = {
@@ -120,7 +126,7 @@ def ADMIN_PROFILE(request):
     return render(request, 'profile.html', context)
 
 
-@login_required(login_url='/')
+@login_required(login_url='/Login')
 def DASHBOARD(request):
     table_count = Resturanttable.objects.all().count
     allbooking_count = Tablebooking.objects.all().count()
@@ -133,11 +139,11 @@ def DASHBOARD(request):
         'abooking_count': abooking_count,
         'rbooking_count': rbooking_count,
         'allbooking_count': allbooking_count,
-    }       
+    }
     return render(request, 'dashboard.html', context)
 
 
-@login_required(login_url='/')
+@login_required(login_url='/Login')
 def ADMIN_PROFILE_UPDATE(request):
     if request.method == "POST":
         profile_pic = request.FILES.get('profile_pic')
@@ -167,7 +173,7 @@ def ADMIN_PROFILE_UPDATE(request):
     return render(request, 'profile.html')
 
 
-@login_required(login_url='/')
+@login_required(login_url='/Login')
 def CHANGE_PASSWORD(request):
     context = {}
     ch = User.objects.filter(id=request.user.id)
@@ -194,7 +200,7 @@ def CHANGE_PASSWORD(request):
     return render(request, 'change-password.html')
 
 
-@login_required(login_url='/')
+@login_required(login_url='/Login')
 def Add_Table(request):
     if request.method == "POST":
         tableno_value = request.POST.get('tableno')
@@ -213,7 +219,7 @@ def Add_Table(request):
     return render(request, 'add-table.html')
 
 
-@login_required(login_url='/')
+@login_required(login_url='/Login')
 def MANAGE_TABLE(request):
     type_list = Resturanttable.objects.all()
     paginator = Paginator(type_list, 10)  # Show 10 categories per page
@@ -232,7 +238,7 @@ def MANAGE_TABLE(request):
     return render(request, 'manage-table.html', context)
 
 
-@login_required(login_url='/')
+@login_required(login_url='/Login')
 def DELETE_TABLE(request, id):
     tablenum = Resturanttable.objects.get(id=id)
     tablenum.delete()
@@ -241,7 +247,7 @@ def DELETE_TABLE(request, id):
     return redirect('manage_table')
 
 
-@login_required(login_url='/')
+@login_required(login_url='/Login')
 def New_Booking(request):
     booking_list = Tablebooking.objects.filter(status='Pending')
     paginator = Paginator(booking_list, 10)  # Show 10 categories per page
@@ -260,7 +266,7 @@ def New_Booking(request):
     return render(request, 'new-booking.html', context)
 
 
-@login_required(login_url='/')
+@login_required(login_url='/Login')
 def VIEW_BOOKING(request, id):
     view_booking = Tablebooking.objects.filter(id=id)
     table_num = Resturanttable.objects.all()
@@ -272,7 +278,7 @@ def VIEW_BOOKING(request, id):
     return render(request, 'view-booking-details.html',context)
 
 
-@login_required(login_url='/')
+@login_required(login_url='/Login')
 def ALL_Booking(request):
     booking_list = Tablebooking.objects.all()
     paginator = Paginator(booking_list, 10)  # Show 10 categories per page
@@ -291,7 +297,7 @@ def ALL_Booking(request):
     return render(request, 'new-booking.html', context)
 
 
-@login_required(login_url='/')
+@login_required(login_url='/Login')
 def Accepted_Booking(request):
     booking_list = Tablebooking.objects.filter(status='Accepted')
     paginator = Paginator(booking_list, 10)  # Show 10 categories per page
@@ -310,7 +316,7 @@ def Accepted_Booking(request):
     return render(request, 'new-booking.html', context)
 
 
-@login_required(login_url='/')
+@login_required(login_url='/Login')
 def Rejected_Booking(request):
     booking_list = Tablebooking.objects.filter(status='Rejected')
     paginator = Paginator(booking_list, 10)  # Show 10 categories per page
@@ -329,7 +335,7 @@ def Rejected_Booking(request):
     return render(request, 'new-booking.html', context)
 
 
-@login_required(login_url='/')
+@login_required(login_url='/Login')
 def UPDATE_BOOKING_REMARK(request):
     if request.method == "POST":
         booking_id = request.POST.get('bid')
@@ -392,7 +398,7 @@ def UPDATE_BOOKING_REMARK(request):
     return redirect('all_booking')
 
 
-@login_required(login_url='/')
+@login_required(login_url='/Login')
 def Booking_Between_Date_Report(request):
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
@@ -425,7 +431,7 @@ def Booking_Between_Date_Report(request):
     )
 
 
-@login_required(login_url='/')
+@login_required(login_url='/Login')
 def Search_Booking(request):
     if request.method == "GET":
         query = request.GET.get('query', '')

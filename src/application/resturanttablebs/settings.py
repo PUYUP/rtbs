@@ -29,14 +29,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'crispy_forms',
     'crispy_bootstrap5',
     'rtbsapp',
     'configsapp',
     'constance',
+    'treebeard',
     'cms',
     'menus',
-    'treebeard',
+    'sekizai',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +49,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.locale.LocaleMiddleware",  # not installed by default
+    "cms.middleware.user.CurrentUserMiddleware",
+    "cms.middleware.page.CurrentPageMiddleware",
+    "cms.middleware.toolbar.ToolbarMiddleware",
+    "cms.middleware.language.LanguageCookieMiddleware",
 ]
 
 ROOT_URLCONF = 'resturanttablebs.urls'
@@ -64,6 +71,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'rtbsapp.context_processors.booking_processor',
+                'django.template.context_processors.i18n',
+                'sekizai.context_processors.sekizai',
             ],
         },
     },
@@ -147,8 +156,7 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 # https://docs.django-cms.org/en/stable/introduction/01-install.html#adding-django-cms-to-an-existing-django-project
 LANGUAGES = [
     ("en", "English"),
-    ("de", "German"),
-    ("it", "Italian"),
 ]
 LANGUAGE_CODE = "en"
 CMS_CONFIRM_VERSION4 = True
+SITE_ID = 1

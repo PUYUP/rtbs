@@ -19,6 +19,9 @@ class Resturanttable(models.Model):
     creationdate = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.tablenum
+
 
 class Tablebooking(models.Model):
     bookingnumber = models.IntegerField(unique=True)
@@ -38,3 +41,8 @@ class Tablebooking(models.Model):
         related_name='tablelocated')
     remark = models.CharField(max_length=250, blank=True)
     remark_date = models.DateTimeField(auto_now=True)
+    start_time = models.DateTimeField(null=True, blank=True)
+    end_time = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return '({}) - {}'.format(self.bookingnumber, self.fullname)

@@ -1,7 +1,5 @@
 
-from django.urls import path
-from django.conf.urls.static import static
-from django.conf import settings
+from django.urls import path, include
 from .import views
 
 urlpatterns = [
@@ -28,4 +26,7 @@ urlpatterns = [
     path('SearchBooking', views.Search_Booking, name='search_booking'),
     path('CheckBookingStatus', views.Check_Booking_Status, name='check_booking_status'),
     path('ViewBookingStatus/<str:bookingnumber>/', views.VIEW_BOOKING_STATUS, name='view_booking_status'),
+    path('Calendar', views.CalendarPage, name='calendar-page'),
+
+    path('api/', include(('rtbsapp.api.urls', 'api'), namespace='api')),
 ]

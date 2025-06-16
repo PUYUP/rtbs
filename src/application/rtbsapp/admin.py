@@ -1,3 +1,5 @@
 from django.contrib import admin
+from rtbsapp.models import Tablebooking, Resturanttable
 
-# Register your models here.
+admin.site.register(Resturanttable)
+admin.site.register(Tablebooking)
