@@ -27,6 +27,7 @@ urlpatterns = [
     path('CheckBookingStatus', views.Check_Booking_Status, name='check_booking_status'),
     path('ViewBookingStatus/<str:bookingnumber>/', views.VIEW_BOOKING_STATUS, name='view_booking_status'),
     path('Calendar', views.CalendarPage, name='calendar-page'),
+    path('TimeSlot', views.TimeSlotSetting.as_view(), name='timeslot_setting'),
 
     path('api/', include(('rtbsapp.api.urls', 'api'), namespace='api')),
 ]

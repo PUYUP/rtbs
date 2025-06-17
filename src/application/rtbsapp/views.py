@@ -5,15 +5,17 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from rtbsapp.models import CustomUser, Resturanttable, Tablebooking
 import random
 from datetime import date
 from django.utils import timezone
 from datetime import datetime
 from django.contrib.auth.hashers import make_password
 from django.utils.timezone import timedelta
+from django.views import View
+from django.db import transaction
 
-from rtbsapp.models import Tablebooking
+from rtbsapp.models import CustomUser, Resturanttable, Tablebooking
+from rtbsapp.forms import TimeSlotForm
 
 User = get_user_model()
 
@@ -491,3 +493,28 @@ def VIEW_BOOKING_STATUS(request, bookingnumber):
          'view_booking_status':view_booking_status,
     }
     return render(request, 'view-booking-status-details.html', context)
+
+
+class TimeSlotSetting(View):
+    template_name = 'timeslot-setting.html'
+    context = {}
+    form = TimeSlotForm
+    model = TimeSlotForm.Meta.model
+
+    def get(self, request):
+        self.context.update({'form': self.form})
+        return render(request, self.template_name, context=self.context)
+
+    @transaction.atomic()
+    def post(self, request):
+        form = self.form(request.POST)
+        self.context.update({'form': form})
+        if form.is_valid():
+            data = form.cleaned_data
+            self.model.objects.update_or_create(
+                label=data.pop('label'),
+                defaults={**data}
+            )
+            messages.success(request, "Timeslot successfully changed.")
+            return redirect('timeslot_setting')
+        return render(request, self.template_name, context=self.context)
