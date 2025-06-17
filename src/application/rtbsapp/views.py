@@ -12,9 +12,13 @@ from datetime import datetime
 from django.contrib.auth.hashers import make_password
 from django.utils.timezone import timedelta
 from django.views import View
+from django.views.generic.edit import DeleteView
 from django.db import transaction
+from django.core.exceptions import ObjectDoesNotExist
+from django.forms.models import model_to_dict
+from django.urls import reverse_lazy
 
-from rtbsapp.models import CustomUser, Resturanttable, Tablebooking
+from rtbsapp.models import CustomUser, Resturanttable, Tablebooking, TimeSlot
 from rtbsapp.forms import TimeSlotForm
 
 User = get_user_model()
@@ -498,23 +502,57 @@ def VIEW_BOOKING_STATUS(request, bookingnumber):
 class TimeSlotSetting(View):
     template_name = 'timeslot-setting.html'
     context = {}
-    form = TimeSlotForm
     model = TimeSlotForm.Meta.model
 
     def get(self, request):
-        self.context.update({'form': self.form})
+        instances = self.model.objects.all().order_by('-id')
+        self.context.update({
+            'instances': instances,
+        })
+        return render(request, self.template_name, context=self.context)
+
+
+class TimeSlotEditorPage(View):
+    template_name = 'timeslot-editor.html'
+    model = TimeSlotForm.Meta.model
+    context = {}
+
+    def get(self, request):
+        pid = request.GET.get('id', None)
+        form = TimeSlotForm()
+        try:
+            instance = self.model.objects.get(id=pid)
+            form.initial = {**model_to_dict(instance)}
+        except ObjectDoesNotExist:
+            pass
+
+        self.context.update({
+            'form': form,
+            'pid': pid,
+        })
         return render(request, self.template_name, context=self.context)
 
     @transaction.atomic()
     def post(self, request):
-        form = self.form(request.POST)
+        pid = request.GET.get('id', None)
+        form = TimeSlotForm(request.POST)
         self.context.update({'form': form})
         if form.is_valid():
             data = form.cleaned_data
-            self.model.objects.update_or_create(
-                label=data.pop('label'),
-                defaults={**data}
-            )
-            messages.success(request, "Timeslot successfully changed.")
+            if pid is not None and pid != 'None':
+                self.model.objects.update_or_create(id=pid, defaults={**data})
+                messages.success(request, "Timeslot successfully updated.")
+            else:
+                self.model.objects.update_or_create(
+                    label=data.pop('label'),
+                    defaults={**data}
+                )
+                messages.success(request, "Timeslot successfully added.")
             return redirect('timeslot_setting')
         return render(request, self.template_name, context=self.context)
+
+
+class TimeSlotDeleteView(DeleteView):
+    model = TimeSlot
+    template_name = 'timeslot_confirm_delete.html'
+    success_url = reverse_lazy('timeslot_setting')

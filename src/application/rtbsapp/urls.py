@@ -26,8 +26,10 @@ urlpatterns = [
     path('SearchBooking', views.Search_Booking, name='search_booking'),
     path('CheckBookingStatus', views.Check_Booking_Status, name='check_booking_status'),
     path('ViewBookingStatus/<str:bookingnumber>/', views.VIEW_BOOKING_STATUS, name='view_booking_status'),
-    path('Calendar', views.CalendarPage, name='calendar-page'),
-    path('TimeSlot', views.TimeSlotSetting.as_view(), name='timeslot_setting'),
+    path('calendar', views.CalendarPage, name='calendar_page'),
+    path('timeslot', views.TimeSlotSetting.as_view(), name='timeslot_setting'),
+    path('timeslot/editor', views.TimeSlotEditorPage.as_view(), name='timeslot_editor'),
+    path('timeslot/<int:pk>/delete/', views.TimeSlotDeleteView.as_view(), name='timeslot_delete'),
 
     path('api/', include(('rtbsapp.api.urls', 'api'), namespace='api')),
 ]
