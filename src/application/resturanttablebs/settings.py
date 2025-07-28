@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-@gcoyeg+mkq^d%#j$^g%o0=2y0)su)w7v@t1mc_=q*2oi8!*=8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'rtbs.asciiutf.com']
+ALLOWED_HOSTS = ['localhost', 'rtbs.asciiutf.com', 'rtbs.asciiutf.com:9090']
 
 
 # Application definition
@@ -161,7 +161,7 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 # ]
 # LANGUAGE_CODE = "en"
 # CMS_CONFIRM_VERSION4 = True
-# SITE_ID = 1
+SITE_ID = 1
 
 # Rest framework settings
 REST_FRAMEWORK = {
