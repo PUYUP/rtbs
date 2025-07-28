@@ -37,9 +37,9 @@ INSTALLED_APPS = [
     'configsapp',
     'constance',
     'treebeard',
-    # 'cms',
-    # 'menus',
-    # 'sekizai',
+    'cms',
+    'menus',
+    'sekizai',
 ]
 
 MIDDLEWARE = [
