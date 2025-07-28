@@ -18,7 +18,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import model_to_dict
 from django.urls import reverse_lazy
 
-from rtbsapp.models import CustomUser, Resturanttable, Tablebooking, TimeSlot
+from rtbsapp.models import CustomUser, RestaurantTable, TableBooking, TimeSlot
 from rtbsapp.forms import TimeSlotForm
 
 User = get_user_model()
@@ -47,7 +47,7 @@ def Index(request):
             return redirect("index")
 
         # Save to the database
-        booking = Tablebooking.objects.create(
+        booking = TableBooking.objects.create(
             fullname=fullname,
             email=email,
             phonenum=phonenum,
@@ -124,7 +124,7 @@ def CalendarPage(request):
     context = {}
     # Get newest booking
     scroll_time = '00:00'
-    booking = Tablebooking.objects.filter(start_time__isnull=False) \
+    booking = TableBooking.objects.filter(start_time__isnull=False) \
         .order_by('start_time').first()
     if booking:
         start_time = booking.start_time
@@ -144,11 +144,11 @@ def ADMIN_PROFILE(request):
 
 @login_required(login_url='/Login')
 def DASHBOARD(request):
-    table_count = Resturanttable.objects.all().count
-    allbooking_count = Tablebooking.objects.all().count()
-    newbooking_count = Tablebooking.objects.filter(status='pending').count()
-    abooking_count = Tablebooking.objects.filter(status='Accepted').count()
-    rbooking_count = Tablebooking.objects.filter(status='Rejected').count()
+    table_count = RestaurantTable.objects.all().count
+    allbooking_count = TableBooking.objects.all().count()
+    newbooking_count = TableBooking.objects.filter(status='pending').count()
+    abooking_count = TableBooking.objects.filter(status='Accepted').count()
+    rbooking_count = TableBooking.objects.filter(status='Rejected').count()
     context = {
         'table_count': table_count,
         'newbooking_count': newbooking_count,
@@ -222,7 +222,7 @@ def Add_Table(request):
         tableno_value = request.POST.get('tableno')
         if tableno_value:
             try:
-                type_obj = Resturanttable(tablenum=tableno_value)
+                type_obj = RestaurantTable(tablenum=tableno_value)
                 type_obj.save()
                 messages.success(request, "Table  detail has been created successfully")
                 return redirect('add_table')
@@ -237,7 +237,7 @@ def Add_Table(request):
 
 @login_required(login_url='/Login')
 def MANAGE_TABLE(request):
-    type_list = Resturanttable.objects.all()
+    type_list = RestaurantTable.objects.all()
     paginator = Paginator(type_list, 10)  # Show 10 categories per page
 
     page_number = request.GET.get('page')
@@ -256,7 +256,7 @@ def MANAGE_TABLE(request):
 
 @login_required(login_url='/Login')
 def DELETE_TABLE(request, id):
-    tablenum = Resturanttable.objects.get(id=id)
+    tablenum = RestaurantTable.objects.get(id=id)
     tablenum.delete()
     messages.success(request, 'Record Delete Succeesfully!!!')
 
@@ -265,7 +265,7 @@ def DELETE_TABLE(request, id):
 
 @login_required(login_url='/Login')
 def New_Booking(request):
-    booking_list = Tablebooking.objects.filter(status='Pending')
+    booking_list = TableBooking.objects.filter(status='Pending')
     paginator = Paginator(booking_list, 10)  # Show 10 categories per page
 
     page_number = request.GET.get('page')
@@ -284,8 +284,8 @@ def New_Booking(request):
 
 @login_required(login_url='/Login')
 def VIEW_BOOKING(request, id):
-    view_booking = Tablebooking.objects.filter(id=id)
-    table_num = Resturanttable.objects.all()
+    view_booking = TableBooking.objects.filter(id=id)
+    table_num = RestaurantTable.objects.all()
 
     context = {
         'view_booking': view_booking,
@@ -296,7 +296,7 @@ def VIEW_BOOKING(request, id):
 
 @login_required(login_url='/Login')
 def ALL_Booking(request):
-    booking_list = Tablebooking.objects.all()
+    booking_list = TableBooking.objects.all()
     paginator = Paginator(booking_list, 10)  # Show 10 categories per page
 
     page_number = request.GET.get('page')
@@ -315,7 +315,7 @@ def ALL_Booking(request):
 
 @login_required(login_url='/Login')
 def Accepted_Booking(request):
-    booking_list = Tablebooking.objects.filter(status='Accepted')
+    booking_list = TableBooking.objects.filter(status='Accepted')
     paginator = Paginator(booking_list, 10)  # Show 10 categories per page
 
     page_number = request.GET.get('page')
@@ -334,7 +334,7 @@ def Accepted_Booking(request):
 
 @login_required(login_url='/Login')
 def Rejected_Booking(request):
-    booking_list = Tablebooking.objects.filter(status='Rejected')
+    booking_list = TableBooking.objects.filter(status='Rejected')
     paginator = Paginator(booking_list, 10)  # Show 10 categories per page
 
     page_number = request.GET.get('page')
@@ -363,7 +363,7 @@ def UPDATE_BOOKING_REMARK(request):
 
         try:
             # Fetch booking instance
-            booking_update = get_object_or_404(Tablebooking, id=booking_id)
+            booking_update = get_object_or_404(TableBooking, id=booking_id)
 
             # Convert `booking_date` to Python `date` format
             booking_date_obj = datetime.strptime(booking_date, "%Y-%m-%d").date()
@@ -376,9 +376,9 @@ def UPDATE_BOOKING_REMARK(request):
 
             # Check table availability if status is "Accepted"
             if table_id and status_text == "Accepted":
-                table_instance = get_object_or_404(Resturanttable, id=int(table_id))
+                table_instance = get_object_or_404(RestaurantTable, id=int(table_id))
 
-                overlapping_bookings = Tablebooking.objects.filter(
+                overlapping_bookings = TableBooking.objects.filter(
                     table_id=table_instance,
                     bookingdate=booking_date_obj,
                     status="Accepted"
@@ -404,9 +404,9 @@ def UPDATE_BOOKING_REMARK(request):
             messages.success(request, "Booking status updated successfully.")
         except ValueError:
             messages.error(request, "Invalid date or time format. Please enter correct values.")
-        except Tablebooking.DoesNotExist:
+        except TableBooking.DoesNotExist:
             messages.error(request, "Booking not found.")
-        except Resturanttable.DoesNotExist:
+        except RestaurantTable.DoesNotExist:
             messages.error(request, "Selected table does not exist.")
         except Exception as e:
             messages.error(request, f"An error occurred: {str(e)}")
@@ -429,7 +429,7 @@ def Booking_Between_Date_Report(request):
             if start_date > end_date:
                 error_message = 'Start date cannot be after end date.'
             else:
-                tb = Tablebooking.objects.filter(postingdate__range=(start_date, end_date))
+                tb = TableBooking.objects.filter(postingdate__range=(start_date, end_date))
                 if not tb:
                     error_message = 'No bookings found for the selected date range.'
         except ValueError:
@@ -452,7 +452,7 @@ def Search_Booking(request):
     if request.method == "GET":
         query = request.GET.get('query', '')
         if query:
-            tb = Tablebooking.objects.filter(
+            tb = TableBooking.objects.filter(
                 bookingnumber__icontains=query
             )
 
@@ -473,7 +473,7 @@ def Check_Booking_Status(request):
     if request.method == "GET":
         query = request.GET.get('query', '')
         if query:
-            tb = Tablebooking.objects.filter(
+            tb = TableBooking.objects.filter(
                 bookingnumber__icontains=query
             )
 
@@ -491,7 +491,7 @@ def Check_Booking_Status(request):
 
 
 def VIEW_BOOKING_STATUS(request, bookingnumber):
-    view_booking_status = Tablebooking.objects \
+    view_booking_status = TableBooking.objects \
         .filter(bookingnumber=bookingnumber)
     context = {
          'view_booking_status':view_booking_status,

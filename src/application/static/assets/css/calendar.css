@@ -1,0 +1,23 @@
+:root {
+    --fc-event-text-color: #004d3d;
+}
+
+.fc th,
+.fc-toolbar-title,
+.fc-datagrid-cell-cushion,
+.fc-timeline-slot-cushion {
+    color: #444;
+}
+
+.fc th,
+.fc td {
+    background-color: #fff;
+}
+
+.fc-start-time,
+.fc-end-time {
+    display: block;
+    font-size: 11px;
+    line-height: 1;
+    font-weight: 600;
+}

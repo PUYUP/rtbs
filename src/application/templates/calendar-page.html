@@ -16,26 +16,282 @@
 {% endblock %}
 
 {% block scrips %}
+<!-- rrule lib -->
+<script src='https://cdn.jsdelivr.net/npm/rrule@2.6.4/dist/es5/rrule.min.js'></script>
+
+<!-- fullcalendar bundle -->
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.17/index.global.min.js'></script>
+
+<!-- the rrule-to-fullcalendar connector. must go AFTER the rrule lib -->
+<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/rrule@6.1.18/index.global.min.js'></script>
+
+<!-- tippy.js for tooltips -->
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+
 <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function() {
+    /**
+     * Gets the index of a day from its name.
+     * (Sunday=0, Monday=1, ..., Saturday=6)
+     * @param {string} dayName - The full or abbreviated name of the day (e.g., "Monday", "mon").
+     * @returns {number} The index of the day, or -1 if the name is invalid.
+     */
+    function getDayIndex(dayName) {
+      if (!dayName) return -1;
+
+      const days = [
+        'sunday', 
+        'monday', 
+        'tuesday', 
+        'wednesday', 
+        'thursday', 
+        'friday', 
+        'saturday'
+      ];
+
+      const normalizedDay = dayName.trim().toLowerCase();
+      
+      // Find the index where the full day name starts with the provided abbreviation
+      const index = days.findIndex(day => day.startsWith(normalizedDay));
+
+      return index;
+    }
+
+    /**
+     * Gets the date of the next specified day of the week.
+     * @param {number} targetDay - The day to find (0=Sunday, 1=Monday, ..., 6=Saturday).
+     * @returns {Date} The date object for the next target day.
+     */
+    function getNextDayOfWeek(targetDay, currDay) {
+      // Calculate the difference in days
+      let date = new Date(currDay);
+      let currentDay = date.getDay(); // Get the current day of the week (0
+      let difference = targetDay - currentDay;
+
+      date.setDate(date.getDate() + difference);
+      
+      return date;
+    }
+
+    /**
+     * Parses a "HH:MM:SS" time string into its components.
+     * @param {string} timeString - The time string to parse (e.g., '08:00:00').
+     * @returns {{hours: number, minutes: number, seconds: number}|null} An object with the time components, or null if the format is invalid.
+     */
+    function parseTime(timeString) {
+      if (!timeString) return null;
+
+      const parts = timeString.split(':');
+
+      if (parts.length !== 3) {
+        return null; // Invalid format
+      }
+
+      const hours = parseInt(parts[0], 10);
+      const minutes = parseInt(parts[1], 10);
+      const seconds = parseInt(parts[2], 10);
+
+      return { hours, minutes, seconds };
+    }
+
+    /**
+     * Formats a date into a 'YYYY-MM-DDTHH:mm:ss+ZZ:ZZ' string.
+     * @param {Date} date The date object to format.
+     * @returns {string} The formatted ISO string with timezone offset.
+     */
+    function formatToIsoOffset(date) {
+      // Date components
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+
+      // Time components
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      const seconds = String(date.getSeconds()).padStart(2, '0');
+
+      // Timezone offset
+      const timezoneOffset = -date.getTimezoneOffset(); // Invert sign for correct format
+      const offsetSign = timezoneOffset >= 0 ? '+' : '-';
+      const offsetHours = String(Math.abs(Math.floor(timezoneOffset / 60))).padStart(2, '0');
+      const offsetMinutes = String(Math.abs(timezoneOffset % 60)).padStart(2, '0');
+
+      // Read this: https://fullcalendar.io/docs/eventTimeFormat
+      // return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${offsetSign}${offsetHours}:${offsetMinutes}`;
+      return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    }
+
+    /**
+     * Gets the full name of the day of the week from a Date object.
+     * @param {Date} date The date object.
+     * @returns {string} The full name of the day (e.g., "Wednesday").
+     */
+    function getDayName(date) {
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      return days[date.getDay()];
+    }
+
     var calendarEl = document.getElementById('calendar');
     var scrollTime = "{{ scroll_time }}";
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
-      timeZone: 'UTC',
+      timeZone: 'local',
       headerToolbar: {
-        left: 'today prev,next',
+        left: 'today',
         center: 'title',
-        right: 'resourceTimelineDay,resourceTimelineTenDay,resourceTimelineMonth'
+        right: 'prev,next'
       },
       initialView: 'resourceTimelineDay',
+      resourceAreaWidth: '160px',
       scrollTime: scrollTime,
-      aspectRatio: 1.5,
+      aspectRatio: 2.5,
       editable: false,
+      slotDuration: '01:00:00',
+      slotMinTime: '06:00:00',
+      slotMaxTime: '24:00:00',
+      eventTimeFormat: { // like '14:30:00'
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        meridiem: false
+      },
+      businessHours: {
+        // days of week. an array of zero-based day of week integers (0=Sunday)
+        daysOfWeek: [ 0, 1, 2, 3, 4, 5, 6 ], // Sunday - Saturday
+        startTime: '06:00', // a start time (8am in this example)
+        endTime: '24:00', // an end time (12am in this example)
+      },
       resourceAreaHeaderContent: 'Tables',
-      resources: "{% url 'api:tables' %}",
-      events: "{% url 'api:bookings' %}",
+      eventDidMount: function(info) {
+        let event = info.event;
+        let startTime = event.extendedProps.start_time;
+        let endTime = event.extendedProps.end_time;
+        let availabilityDate = event.extendedProps.availability_date;
+        let isAvailable = event.extendedProps.is_available;
+        let customerInitial = event.extendedProps.customer_initial || '';
+
+        // Replace title with custom html.
+        if (isAvailable) {
+          info.el.style.backgroundColor = '#dafff0';
+          info.el.style.borderColor = '#1cf9b0';
+
+          if (startTime && endTime) {
+            let startTimeShort = startTime.split(':').slice(0, 2).join(':');
+            let endTimeShort = endTime.split(':').slice(0, 2).join(':');
+
+            $(info.el).find('.fc-event-title')
+              .html('<span class="fc-start-time">' + startTimeShort + ' to</span> <span class="fc-end-time">' + endTimeShort + '</span>');
+          }
+          else {
+            info.el.style.backgroundColor = '#d2e7ff';
+            info.el.style.borderColor = '#1c7df9';
+          }
+        } 
+        else {
+          info.el.style.backgroundColor = '#fff5aa';
+          info.el.style.borderColor = '#f9d71c';
+
+          $(info.el).find('.fc-event-title')
+            .addClass('fc-booked')
+            .css('color', '#594800')
+            .html('<span class="fc-start-time">booked</span> <span class="fc-end-time">by ' + customerInitial + '</span>');
+        }
+      },
+      resources: function(fetchInfo, successCallback, failureCallback) {
+        $.ajax({
+          url: "{% url 'api:tables' %}",
+          method: 'GET',
+          success: function(data) {
+            successCallback(data.results);
+          },
+          error: function() {
+            failureCallback();
+          }
+        });
+      },
+      events: function(fetchInfo, successCallback, failureCallback) {
+        let dayName = getDayName(fetchInfo.start).toLocaleLowerCase();
+        let dayIndex = getDayIndex(dayName);
+        let nextDate = getNextDayOfWeek(dayIndex, fetchInfo.start);
+
+        $.ajax({
+          url: "{% url 'api:table_availabilities' %}",
+          method: 'GET',
+          data: {
+            day_of_week: dayName,
+            date: nextDate.toISOString().split('T')[0]  // Send only the date part
+          },
+          success: function(data) {
+            let dayName = getDayName(fetchInfo.start).toLocaleLowerCase();
+            let dayIndex = getDayIndex(dayName);
+            let nextDate = getNextDayOfWeek(dayIndex, fetchInfo.start);
+
+            data.results.forEach(function(table) {
+              let dayIndex = getDayIndex(table.day_of_week);
+              let nextDate = getNextDayOfWeek(dayIndex, fetchInfo.start);
+
+              let startTime = table.start_time || '08:00:00';
+              let endTime = table.end_time || '24:00:00';
+
+              let startDateTime = new Date(nextDate);
+              let parseStartTime = parseTime(startTime);
+              startDateTime.setHours(parseStartTime.hours, parseStartTime.minutes, parseStartTime.seconds, 0);
+
+              let endDateTime = new Date(nextDate);
+              let parseEndTime = parseTime(endTime);
+              endDateTime.setHours(parseEndTime.hours, parseEndTime.minutes, parseEndTime.seconds, 0);
+
+              if (table.customer_initial) {
+                table.title = table.customer_initial;
+              } else {
+                table.title = table.title;
+              }
+
+              table.start = formatToIsoOffset(startDateTime);
+              table.end = formatToIsoOffset(endDateTime);
+            });
+
+            successCallback(data.results);
+          },
+          error: function() {
+            failureCallback();
+          }
+        });
+      },
+      eventMouseEnter: function(info) {
+        let event = info.event;
+        let booking = event.extendedProps.booking;
+
+        if (booking) {
+          tippy(info.el, {
+            content: `
+              <div>
+                <strong>${booking.fullname}</strong><br>
+                Phone Number: ${booking.phonenum}<br>
+                Email: ${booking.email}
+              </div>
+            `,
+            allowHTML: true,
+            theme: 'light-border',
+            placement: 'top'
+          });
+        }
+        else {
+          tippy(info.el, {
+            content: `
+              <div>
+                <strong>${info.event.title}</strong><br>
+                Start: ${info.event.start.toLocaleString()}<br>
+                End: ${info.event.end ? info.event.end.toLocaleString() : 'No end time'}
+              </div>
+            `,
+            allowHTML: true,
+            theme: 'light-border',
+            placement: 'top'
+          });
+        }
+      },
     });
 
     calendar.render();

@@ -21,7 +21,7 @@ ALLOWED_HOSTS = ['localhost', 'rtbs.asciiutf.com']
 # Application definition
 
 INSTALLED_APPS = [
-    'djangocms_admin_style',
+    # 'djangocms_admin_style',
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
     'rest_framework',
     'crispy_forms',
     'crispy_bootstrap5',
@@ -36,9 +37,9 @@ INSTALLED_APPS = [
     'configsapp',
     'constance',
     'treebeard',
-    'cms',
-    'menus',
-    'sekizai',
+    # 'cms',
+    # 'menus',
+    # 'sekizai',
 ]
 
 MIDDLEWARE = [
@@ -50,10 +51,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "django.middleware.locale.LocaleMiddleware",  # not installed by default
-    "cms.middleware.user.CurrentUserMiddleware",
-    "cms.middleware.page.CurrentPageMiddleware",
-    "cms.middleware.toolbar.ToolbarMiddleware",
-    "cms.middleware.language.LanguageCookieMiddleware",
+    # "cms.middleware.user.CurrentUserMiddleware",
+    # "cms.middleware.page.CurrentPageMiddleware",
+    # "cms.middleware.toolbar.ToolbarMiddleware",
+    # "cms.middleware.language.LanguageCookieMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'resturanttablebs.urls'
@@ -154,9 +156,23 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 
 # https://docs.django-cms.org/en/stable/introduction/01-install.html#adding-django-cms-to-an-existing-django-project
-LANGUAGES = [
-    ("en", "English"),
+# LANGUAGES = [
+#     ("en", "English"),
+# ]
+# LANGUAGE_CODE = "en"
+# CMS_CONFIRM_VERSION4 = True
+# SITE_ID = 1
+
+# Rest framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 500,
+}
+
+# Django Debug Toolbar settings
+INTERNAL_IPS = [
+    '127.0.0.1',
 ]
-LANGUAGE_CODE = "en"
-CMS_CONFIRM_VERSION4 = True
-SITE_ID = 1

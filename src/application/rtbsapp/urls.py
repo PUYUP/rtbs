@@ -1,5 +1,7 @@
 
 from django.urls import path, include
+from django.conf import settings
+from debug_toolbar.toolbar import debug_toolbar_urls
 from .import views
 
 urlpatterns = [
@@ -31,5 +33,8 @@ urlpatterns = [
     path('timeslot/editor', views.TimeSlotEditorPage.as_view(), name='timeslot_editor'),
     path('timeslot/<int:pk>/delete/', views.TimeSlotDeleteView.as_view(), name='timeslot_delete'),
 
-    path('api/', include(('rtbsapp.api.urls', 'api'), namespace='api')),
+    path('api/', include(('rtbsapp.api.routes', 'api'), namespace='api')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += debug_toolbar_urls()

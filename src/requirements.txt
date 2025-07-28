@@ -9,3 +9,4 @@ crispy-bootstrap5==2025.4
 django-cms==5.0.1
 djangorestframework==3.16.0
 django-filter==25.1
+django-debug-toolbar==5.2.0
