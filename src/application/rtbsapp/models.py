@@ -80,6 +80,7 @@ class BookingSession(models.Model):
                 TimeSlot.objects.create(
                     session=self,
                     day_of_week=day,
+                    is_available=True,  # Default to available
                 )
             else:
                 # Create time slots for each day of the week
@@ -91,7 +92,8 @@ class BookingSession(models.Model):
                         end_time=(
                             datetime.combine(date.min, slot_time) +
                             timedelta(minutes=self.duration_minutes)
-                        ).time()
+                        ).time(),
+                        is_available=True,  # Default to available
                     )
 
     # def save(self, *args, **kwargs):
