@@ -176,3 +176,6 @@ REST_FRAMEWORK = {
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+# https://django-constance.readthedocs.io/en/latest/index.html
+CONSTANCE_IGNORE_ADMIN_VERSION_CHECK = True
